@@ -22,7 +22,10 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('users/', include('users.urls')),
+    path('materials/', include('materials.urls')),
 ]
+
 
 # Добавляем раздачу медиафайлов в режиме разработки
 if settings.DEBUG:
