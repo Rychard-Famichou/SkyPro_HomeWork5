@@ -27,7 +27,7 @@ class Lesson(models.Model):
         validators=[FileExtensionValidator(allowed_extensions=["mp4", "webm", "avi", "mov"])],
         verbose_name="Видеофайл",
     )
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name="Курс")
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='lessons', verbose_name="Курс")
 
     def __str__(self):
         return self.title

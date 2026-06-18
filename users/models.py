@@ -1,5 +1,8 @@
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.core.exceptions import ValidationError
 from django.db import models
+
+from materials.models import Course, Lesson
 
 
 # Create your models here.
@@ -59,3 +62,31 @@ class CustomUser(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return self.is_superuser
+
+
+class Payment(models.Model):
+    class MethodChoices(models.TextChoices):
+        CASH = "CASH", "Наличные"
+        TRANSFER = "TRANSFER", "Перевод"
+
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='payments', verbose_name="Пользователь")
+    course = models.ForeignKey(Course, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Курс")
+    lesson = models.ForeignKey(Lesson, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Урок")
+    amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Сумма оплаты")
+    date = models.DateTimeField(auto_now_add=True, verbose_name="Дата оплаты")
+    method = models.CharField(choices=MethodChoices.choices, max_length=20, verbose_name="Метод оплаты")
+
+    class Meta:
+        verbose_name = "Платеж"
+        verbose_name_plural = "Платежи"
+
+    def __str__(self):
+        paid_item = self.course if self.course else self.lesson
+        return f"Платеж от {self.user} за {paid_item}"
+
+    def clean(self):
+        super().clean()
+        if not self.course and not self.lesson:
+            raise ValidationError("Выберите либо курс, либо урок, за который производится оплата.")
+        if self.course and self.lesson:
+            raise ValidationError("Платеж не может быть одновременно и за курс, и за урок. Выберите что-то одно.")

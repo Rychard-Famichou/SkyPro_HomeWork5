@@ -1,0 +1,119 @@
+[
+{
+    "model": "users.customuser",
+    "pk": 1,
+    "fields": {
+        "password": "",
+        "last_login": null,
+        "username": "Ученик",
+        "email": "test@gmail.com",
+        "phone": null,
+        "city": null,
+        "avatar": "",
+        "first_name": null,
+        "last_name": null,
+        "is_active": true,
+        "is_staff": false,
+        "is_superuser": false
+    }
+},
+{
+    "model": "users.payment",
+    "pk": 1,
+    "fields": {
+        "user": 1,
+        "course": 2,
+        "lesson": null,
+        "amount": "100.00",
+        "date": "2026-06-18T11:49:58.997Z",
+        "method": "TRANSFER"
+    }
+},
+{
+    "model": "users.payment",
+    "pk": 2,
+    "fields": {
+        "user": 1,
+        "course": null,
+        "lesson": 1,
+        "amount": "40.00",
+        "date": "2026-06-18T11:50:23.292Z",
+        "method": "TRANSFER"
+    }
+},
+{
+    "model": "users.payment",
+    "pk": 3,
+    "fields": {
+        "user": 1,
+        "course": null,
+        "lesson": 2,
+        "amount": "40.00",
+        "date": "2026-06-18T11:50:44.624Z",
+        "method": "TRANSFER"
+    }
+},
+{
+    "model": "users.payment",
+    "pk": 4,
+    "fields": {
+        "user": 1,
+        "course": null,
+        "lesson": 3,
+        "amount": "40.00",
+        "date": "2026-06-18T11:50:47.534Z",
+        "method": "TRANSFER"
+    }
+},
+{
+    "model": "materials.course",
+    "pk": 1,
+    "fields": {
+        "title": "Python",
+        "description": "Курс для программистов",
+        "preview_image": ""
+    }
+},
+{
+    "model": "materials.course",
+    "pk": 2,
+    "fields": {
+        "title": "Python 2.0",
+        "description": "Курс для программистов",
+        "preview_image": ""
+    }
+},
+{
+    "model": "materials.lesson",
+    "pk": 1,
+    "fields": {
+        "title": "PyCharm",
+        "description": "IDE",
+        "preview_image": "",
+        "video_file": "",
+        "course": 1
+    }
+},
+{
+    "model": "materials.lesson",
+    "pk": 2,
+    "fields": {
+        "title": "Django",
+        "description": "Framework",
+        "preview_image": "",
+        "video_file": "",
+        "course": 1
+    }
+},
+{
+    "model": "materials.lesson",
+    "pk": 3,
+    "fields": {
+        "title": "REST",
+        "description": "Framework Django",
+        "preview_image": "",
+        "video_file": "",
+        "course": 1
+    }
+}
+]
