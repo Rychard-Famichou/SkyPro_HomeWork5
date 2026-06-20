@@ -1,8 +1,8 @@
+from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import PermissionsMixin
 from django.core.exceptions import ValidationError
 from django.db import models
-
-from materials.models import Course, Lesson
 
 
 # Create your models here.
@@ -32,7 +32,7 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(username, email, password, **extra_fields)
 
 
-class CustomUser(AbstractBaseUser):
+class CustomUser(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=25, unique=True, verbose_name="Никнейм")
     email = models.EmailField(max_length=50, unique=True, verbose_name="Почта")
     phone = models.CharField(max_length=15, unique=True, blank=True, null=True, verbose_name="Телефон")
@@ -69,9 +69,9 @@ class Payment(models.Model):
         CASH = "CASH", "Наличные"
         TRANSFER = "TRANSFER", "Перевод"
 
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='payments', verbose_name="Пользователь")
-    course = models.ForeignKey(Course, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Курс")
-    lesson = models.ForeignKey(Lesson, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Урок")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='payments', verbose_name="Пользователь")
+    course = models.ForeignKey('materials.Course', on_delete=models.PROTECT, null=True, blank=True, verbose_name="Курс")
+    lesson = models.ForeignKey('materials.Lesson', on_delete=models.PROTECT, null=True, blank=True, verbose_name="Урок")
     amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Сумма оплаты")
     date = models.DateTimeField(auto_now_add=True, verbose_name="Дата оплаты")
     method = models.CharField(choices=MethodChoices.choices, max_length=20, verbose_name="Метод оплаты")

@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.validators import FileExtensionValidator
 from django.db import models
 
@@ -6,6 +7,7 @@ from django.db import models
 class Course(models.Model):
     title = models.CharField(max_length=30, verbose_name="Название")
     description = models.TextField(verbose_name="Описание")
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Владелец")
     preview_image = models.ImageField(upload_to='images/', blank=True, null=True, verbose_name="Превью")
 
     def __str__(self):
@@ -19,6 +21,7 @@ class Course(models.Model):
 class Lesson(models.Model):
     title = models.CharField(max_length=30, verbose_name="Название")
     description = models.TextField(verbose_name="Описание")
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Владелец")
     preview_image = models.ImageField(upload_to='images/', blank=True, null=True, verbose_name="Превью")
     video_file = models.FileField(
         upload_to="videos/",
