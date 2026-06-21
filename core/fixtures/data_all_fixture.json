@@ -1,12 +1,40 @@
 [
 {
+    "model": "auth.group",
+    "pk": 1,
+    "fields": {
+        "name": "Модераторы",
+        "permissions": []
+    }
+},
+{
     "model": "users.customuser",
     "pk": 1,
     "fields": {
-        "password": "",
+        "password": "pbkdf2_sha256$1200000$lNxVs64XIja5ZRpXqcTbqS$xjmUubjDQkxTgJhYnbOd6JayoB9zs5ef/bA5jrwZHec=",
         "last_login": null,
-        "username": "Ученик",
-        "email": "test@gmail.com",
+        "username": "admin",
+        "email": "admin@example.com",
+        "phone": null,
+        "city": null,
+        "avatar": "",
+        "first_name": null,
+        "last_name": null,
+        "is_active": true,
+        "is_staff": true,
+        "is_superuser": true,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.customuser",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$9ia6t32yAkpStL1Mg5ltop$9ZkvYNXwkTo9LQwUQ9VWdmZxGU23aECmFaBJyXWvP6U=",
+        "last_login": null,
+        "username": "user",
+        "email": "user@example.com",
         "phone": null,
         "city": null,
         "avatar": "",
@@ -14,54 +42,62 @@
         "last_name": null,
         "is_active": true,
         "is_staff": false,
-        "is_superuser": false
+        "is_superuser": false,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.customuser",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$4losl0LbksFKcBgCbnEebS$TZLwUdN0JInblj7lddk0E6tZmpQtJWmMCBSxm9oqbTc=",
+        "last_login": null,
+        "username": "moder",
+        "email": "moder@example.com",
+        "phone": null,
+        "city": null,
+        "avatar": "",
+        "first_name": null,
+        "last_name": null,
+        "is_active": true,
+        "is_staff": false,
+        "is_superuser": false,
+        "groups": [
+            1
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.customuser",
+    "pk": 4,
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$uLWoEmrnwpKbzRkGTzQEDF$S/BBjCCPHWcsL18gDwua/NiN93rv13jxHXGN/u8sycU=",
+        "last_login": null,
+        "username": "revizor",
+        "email": "revizor@example.com",
+        "phone": null,
+        "city": null,
+        "avatar": "",
+        "first_name": null,
+        "last_name": null,
+        "is_active": true,
+        "is_staff": false,
+        "is_superuser": false,
+        "groups": [],
+        "user_permissions": []
     }
 },
 {
     "model": "users.payment",
     "pk": 1,
     "fields": {
-        "user": 1,
+        "user": 4,
         "course": 2,
         "lesson": null,
-        "amount": "100.00",
-        "date": "2026-06-18T11:49:58.997Z",
-        "method": "TRANSFER"
-    }
-},
-{
-    "model": "users.payment",
-    "pk": 2,
-    "fields": {
-        "user": 1,
-        "course": null,
-        "lesson": 1,
-        "amount": "40.00",
-        "date": "2026-06-18T11:50:23.292Z",
-        "method": "TRANSFER"
-    }
-},
-{
-    "model": "users.payment",
-    "pk": 3,
-    "fields": {
-        "user": 1,
-        "course": null,
-        "lesson": 2,
-        "amount": "40.00",
-        "date": "2026-06-18T11:50:44.624Z",
-        "method": "TRANSFER"
-    }
-},
-{
-    "model": "users.payment",
-    "pk": 4,
-    "fields": {
-        "user": 1,
-        "course": null,
-        "lesson": 3,
-        "amount": "40.00",
-        "date": "2026-06-18T11:50:47.534Z",
+        "amount": "1000.00",
+        "date": "2026-06-20T12:39:44.091Z",
         "method": "TRANSFER"
     }
 },
@@ -71,6 +107,7 @@
     "fields": {
         "title": "Python",
         "description": "Курс для программистов",
+        "owner": 2,
         "preview_image": ""
     }
 },
@@ -78,8 +115,9 @@
     "model": "materials.course",
     "pk": 2,
     "fields": {
-        "title": "Python 2.0",
-        "description": "Курс для программистов",
+        "title": "Test",
+        "description": "Test-test",
+        "owner": 2,
         "preview_image": ""
     }
 },
@@ -87,8 +125,9 @@
     "model": "materials.lesson",
     "pk": 1,
     "fields": {
-        "title": "PyCharm",
-        "description": "IDE",
+        "title": "Python",
+        "description": "Что это такое",
+        "owner": 2,
         "preview_image": "",
         "video_file": "",
         "course": 1
@@ -100,6 +139,7 @@
     "fields": {
         "title": "Django",
         "description": "Framework",
+        "owner": 2,
         "preview_image": "",
         "video_file": "",
         "course": 1
@@ -109,11 +149,24 @@
     "model": "materials.lesson",
     "pk": 3,
     "fields": {
-        "title": "REST",
-        "description": "Framework Django",
+        "title": "Rest",
+        "description": "Framework",
+        "owner": 2,
         "preview_image": "",
         "video_file": "",
         "course": 1
+    }
+},
+{
+    "model": "materials.lesson",
+    "pk": 4,
+    "fields": {
+        "title": "Test",
+        "description": "Test-test",
+        "owner": 2,
+        "preview_image": "",
+        "video_file": "",
+        "course": 2
     }
 }
 ]
