@@ -1,7 +1,9 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from users.models import CustomUser, Payment
+from materials.validators import CourseOrLessonValidator
+from users.models import CustomUser, Payment, Subscription
+from users.validators import CoursePkValidator
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -20,23 +22,11 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
-        fields = ('user', 'course', 'lesson', 'amount', 'date', 'method')
-        read_only_fields = ['user']
-
-    def validate(self, attrs):
-        course = attrs.get('course', self.instance.course if self.instance else None)
-        lesson = attrs.get('lesson', self.instance.lesson if self.instance else None)
-
-        if not course and not lesson:
-            raise serializers.ValidationError(
-                "Выберите либо курс, либо урок, за который производится оплата."
-            )
-        if course and lesson:
-            raise serializers.ValidationError(
-                "Платеж не может быть одновременно и за курс, и за урок. Выберите что-то одно."
-            )
-
-        return attrs
+        fields = ('owner', 'course', 'lesson', 'amount', 'date', 'method')
+        read_only_fields = ['owner']
+        validators = [
+            CourseOrLessonValidator()
+        ]
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -55,3 +45,14 @@ class PublicUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['username', 'email', 'first_name', 'phone', 'city', 'avatar']
+
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+    course_id = serializers.IntegerField()
+
+    class Meta:
+        model = Subscription
+        fields = ['course_id']
+        validators = [
+            CoursePkValidator(field="course_id"),
+        ]
