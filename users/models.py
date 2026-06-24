@@ -69,7 +69,8 @@ class Payment(models.Model):
         CASH = "CASH", "Наличные"
         TRANSFER = "TRANSFER", "Перевод"
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='payments', verbose_name="Пользователь")
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='payments',
+                              verbose_name="Владелец")
     course = models.ForeignKey('materials.Course', on_delete=models.PROTECT, null=True, blank=True, verbose_name="Курс")
     lesson = models.ForeignKey('materials.Lesson', on_delete=models.PROTECT, null=True, blank=True, verbose_name="Урок")
     amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Сумма оплаты")
@@ -82,11 +83,16 @@ class Payment(models.Model):
 
     def __str__(self):
         paid_item = self.course if self.course else self.lesson
-        return f"Платеж от {self.user} за {paid_item}"
+        return f"Платеж от {self.owner} за {paid_item}"
 
-    def clean(self):
-        super().clean()
-        if not self.course and not self.lesson:
-            raise ValidationError("Выберите либо курс, либо урок, за который производится оплата.")
-        if self.course and self.lesson:
-            raise ValidationError("Платеж не может быть одновременно и за курс, и за урок. Выберите что-то одно.")
+
+class Subscription(models.Model):
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Владелец")
+    course = models.ForeignKey('materials.Course', on_delete=models.CASCADE, verbose_name="Курс")
+
+    class Meta:
+        verbose_name = "Подписка"
+        verbose_name_plural = "Подписки"
+
+    def __str__(self):
+        return f"Подписка от {self.owner} на {self.course}"
