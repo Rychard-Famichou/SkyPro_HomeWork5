@@ -7,6 +7,7 @@ from django.db import models
 class Course(models.Model):
     title = models.CharField(max_length=30, verbose_name="Название")
     description = models.TextField(verbose_name="Описание")
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена курса")
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Владелец")
     preview_image = models.ImageField(upload_to='images/', blank=True, null=True, verbose_name="Превью")
 
@@ -27,6 +28,7 @@ youtube_validator = RegexValidator(
 class Lesson(models.Model):
     title = models.CharField(max_length=30, verbose_name="Название")
     description = models.TextField(verbose_name="Описание")
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена урока")
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Владелец")
     preview_image = models.ImageField(upload_to='images/', blank=True, null=True, verbose_name="Превью")
     video_link = models.URLField(

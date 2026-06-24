@@ -7,8 +7,8 @@ from users.validators import CoursePkValidator
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    email = serializers.EmailField()
-    password = serializers.CharField(write_only=True)
+    email = serializers.EmailField(label="Почта")
+    password = serializers.CharField(write_only=True, label="Пароль")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -22,16 +22,27 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
-        fields = ('owner', 'course', 'lesson', 'amount', 'date', 'method')
-        read_only_fields = ['owner']
+        fields = ('status', 'owner', 'course', 'lesson', 'amount', 'date', 'method', 'stripe_session_id', 'link')
+        read_only_fields = ['owner', 'amount', 'stripe_session_id', 'link', 'date']
         validators = [
             CourseOrLessonValidator()
         ]
 
+    def create(self, validated_data):
+        course = validated_data.get('course')
+        lesson = validated_data.get('lesson')
+
+        if course:
+            validated_data['amount'] = course.price
+        elif lesson:
+            validated_data['amount'] = lesson.price
+
+        return super().create(validated_data)
+
 
 class CustomUserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
-    payments = PaymentSerializer(many=True, read_only=True)
+    password = serializers.CharField(write_only=True, label="Пароль")
+    payments = PaymentSerializer(many=True, read_only=True, label="Платежи")
 
     class Meta:
         model = CustomUser

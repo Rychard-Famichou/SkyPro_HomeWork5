@@ -16,13 +16,13 @@ class LessonSerializer(serializers.ModelSerializer):
 
 
 class CourseSerializer(serializers.ModelSerializer):
-    lesson_count = serializers.SerializerMethodField()
-    lessons = LessonSerializer(many=True, read_only=True)
-    subscription = serializers.BooleanField(read_only=True)
+    lesson_count = serializers.SerializerMethodField(label='Количество уроков')
+    lessons = LessonSerializer(many=True, read_only=True, label='Список уроков')
+    subscription = serializers.BooleanField(read_only=True, label='Подписка')
 
     class Meta:
         model = Course
-        fields = ('title', 'description', 'owner', 'subscription', 'preview_image', 'lesson_count', 'lessons')
+        fields = ('title', 'description', 'price', 'owner', 'subscription', 'preview_image', 'lesson_count', 'lessons')
         read_only_fields = ['owner', 'subscription']
 
     def get_lesson_count(self, obj):
