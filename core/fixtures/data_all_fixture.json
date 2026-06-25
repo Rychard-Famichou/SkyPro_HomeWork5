@@ -91,14 +91,40 @@
 },
 {
     "model": "users.payment",
-    "pk": 1,
+    "pk": 2,
     "fields": {
-        "user": 4,
+        "owner": 4,
         "course": 2,
         "lesson": null,
         "amount": "1000.00",
         "date": "2026-06-20T12:39:44.091Z",
-        "method": "TRANSFER"
+        "method": "TRANSFER",
+        "stripe_session_id": null,
+        "link": null,
+        "status": "created"
+    }
+},
+{
+    "model": "users.payment",
+    "pk": 3,
+    "fields": {
+        "owner": 4,
+        "course": 1,
+        "lesson": null,
+        "amount": "100.00",
+        "date": "2026-06-24T12:56:48.283Z",
+        "method": "TRANSFER",
+        "stripe_session_id": "cs_test_a1FMIY0Gecb7Y4aNehqF8VHU9dAhqk8OZhjflsgxv0IRdybmJrSi1K6atf",
+        "link": "https://checkout.stripe.com/c/pay/cs_test_a1FMIY0Gecb7Y4aNehqF8VHU9dAhqk8OZhjflsgxv0IRdybmJrSi1K6atf#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdicGRmZGhqaWBTZHdsZGtxJz8nZmprcXdqaScpJ2R1bE5gfCc%2FJ3VuWnFgdnFaMDRRaWk0Zj1CTzIxfDJNbWpLbmxKRmlHX19KdzN2bWNIc3c3TDV8TGBtfDZtNzVvMkRkUjNnfV9%2FMFdcS3Zfb0I9b111dlB0Y3FLV3xVY2BDQmt2Nk5BcTY1NWxWQHduNUFfJyknY3dqaFZgd3Ngdyc%2FcXdwYCknZ2RmbmJ3anBrYUZqaWp3Jz8nJmNjY2NjYycpJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl",
+        "status": "unpaid"
+    }
+},
+{
+    "model": "users.subscription",
+    "pk": 2,
+    "fields": {
+        "owner": 4,
+        "course": 1
     }
 },
 {
@@ -107,6 +133,7 @@
     "fields": {
         "title": "Python",
         "description": "Курс для программистов",
+        "price": "100.00",
         "owner": 2,
         "preview_image": ""
     }
@@ -117,6 +144,7 @@
     "fields": {
         "title": "Test",
         "description": "Test-test",
+        "price": "100.00",
         "owner": 2,
         "preview_image": ""
     }
@@ -127,9 +155,10 @@
     "fields": {
         "title": "Python",
         "description": "Что это такое",
+        "price": "100.00",
         "owner": 2,
         "preview_image": "",
-        "video_file": "",
+        "video_link": null,
         "course": 1
     }
 },
@@ -139,9 +168,10 @@
     "fields": {
         "title": "Django",
         "description": "Framework",
+        "price": "100.00",
         "owner": 2,
         "preview_image": "",
-        "video_file": "",
+        "video_link": null,
         "course": 1
     }
 },
@@ -151,9 +181,10 @@
     "fields": {
         "title": "Rest",
         "description": "Framework",
+        "price": "100.00",
         "owner": 2,
         "preview_image": "",
-        "video_file": "",
+        "video_link": null,
         "course": 1
     }
 },
@@ -163,9 +194,10 @@
     "fields": {
         "title": "Test",
         "description": "Test-test",
+        "price": "100.00",
         "owner": 2,
         "preview_image": "",
-        "video_file": "",
+        "video_link": null,
         "course": 2
     }
 }

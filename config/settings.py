@@ -13,6 +13,7 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
+import stripe
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'django_filters',
+    'drf_yasg',
 
     'core',
     'users',
@@ -144,6 +146,12 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1), #minutes=15
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),  # minutes=15
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
+
+
+STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
+STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
+
+stripe.api_key = STRIPE_SECRET_KEY

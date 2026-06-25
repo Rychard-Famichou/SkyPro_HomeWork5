@@ -1,5 +1,6 @@
 from rest_framework import viewsets, generics
 from rest_framework.exceptions import NotAuthenticated
+from rest_framework.views import APIView
 
 from materials.models import Course, Lesson
 from materials.paginators import CoursePaginator, LessonPaginator
@@ -9,6 +10,7 @@ from users.permissions import IsOwner, IsModerator, IsNotModerator
 
 # Create your views here.
 class CourseViewSet(viewsets.ModelViewSet):
+    """CRUD ViewSet for Course objects"""
     serializer_class = CourseSerializer
     pagination_class = CoursePaginator
 
@@ -42,6 +44,7 @@ class LessonBaseView(generics.GenericAPIView):
 
 
 class LessonCreateAPIView(LessonBaseView, generics.CreateAPIView):
+    """Create a new lesson"""
     permission_classes = [IsNotModerator]
 
     def perform_create(self, serializer):
@@ -51,6 +54,7 @@ class LessonCreateAPIView(LessonBaseView, generics.CreateAPIView):
 
 
 class LessonListAPIView(LessonBaseView, generics.ListAPIView):
+    """List all lessons"""
     pagination_class = LessonPaginator
     permission_classes = [IsOwner | IsModerator]
 
@@ -61,12 +65,15 @@ class LessonListAPIView(LessonBaseView, generics.ListAPIView):
 
 
 class LessonRetrieveAPIView(LessonBaseView, generics.RetrieveAPIView):
+    """Retrieve a lesson"""
     permission_classes = [IsOwner | IsModerator]
 
 
 class LessonUpdateAPIView(LessonBaseView, generics.UpdateAPIView):
+    """Update a lesson"""
     permission_classes = [IsOwner | IsModerator]
 
 
 class LessonDestroyAPIView(LessonBaseView, generics.DestroyAPIView):
+    """Delete a lesson"""
     pass
