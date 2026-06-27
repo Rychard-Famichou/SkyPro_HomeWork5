@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'django_filters',
     'drf_yasg',
+    'django_celery_beat',
 
     'core',
     'users',
@@ -150,7 +151,6 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
-
 STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
 STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
 
@@ -158,20 +158,43 @@ stripe.api_key = STRIPE_SECRET_KEY
 
 # Настройки для Celery
 # URL-адрес брокера сообщений
-CELERY_BROKER_URL = 'redis://localhost:6379' # Например, Redis, который по умолчанию работает на порту 6379
+CELERY_BROKER_URL = 'redis://localhost:6379'  # Например, Redis, который по умолчанию работает на порту 6379
 # URL-адрес брокера результатов, также Redis
 CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 # Часовой пояс для работы Celery
-CELERY_TIMEZONE = "Australia/Tasmania"
+CELERY_TIMEZONE = 'Europe/Warsaw'
 # Флаг отслеживания выполнения задач
 CELERY_TASK_TRACK_STARTED = True
 # Максимальное время на выполнение задачи
 CELERY_TASK_TIME_LIMIT = 30 * 60
 
-
 CELERY_BEAT_SCHEDULE = {
-    # 'task-name': {
-    #     'task': 'myapp.tasks.my_task',  # Путь к задаче
-    #     'schedule': timedelta(minutes=10),  # Расписание выполнения задачи (например, каждые 10 минут)
-    # },
+    'active_users': {
+        'task': 'users.tasks.toggle_active',
+        'schedule': timedelta(hours=24),
+    },
 }
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "protocol": 2
+        }
+    }
+}
+
+# Email
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# Настройки SMTP для отправки писем через Gmail
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+# Настройка отправки писем (консольная для разработки)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

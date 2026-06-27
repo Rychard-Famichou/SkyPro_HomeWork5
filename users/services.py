@@ -1,7 +1,9 @@
+from datetime import timedelta
 from functools import wraps
 
 import stripe
 from django.conf import settings
+from django.utils import timezone
 from rest_framework.exceptions import ValidationError, APIException
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -55,3 +57,10 @@ def retrieve_stripe_checkout_session(session_id):
     session = stripe.checkout.Session.retrieve(session_id, )
     status = session["payment_status"]
     return status
+
+
+def check_active_days(last_login):
+    """Проверяет, прошло ли более 31 дня с последнего входа."""
+    if not last_login:
+        return True
+    return timezone.now() - last_login >= timedelta(days=31)

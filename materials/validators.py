@@ -1,6 +1,7 @@
 import re
 from urllib.parse import urlparse
 
+from django.core.validators import RegexValidator
 from rest_framework import serializers
 
 
@@ -45,3 +46,10 @@ class LessonVideoUrlValidator:
             )
 
         return url
+
+
+
+youtube_validator = RegexValidator(
+    regex=r'^(https?://)?(www\.)?(youtube\.com|youtu\.be)/.+$',
+    message='Введите корректную ссылку на видеоролик YouTube.'
+)

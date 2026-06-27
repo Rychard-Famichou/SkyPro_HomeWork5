@@ -1,6 +1,8 @@
 from django.conf import settings
-from django.core.validators import RegexValidator
 from django.db import models
+
+from materials.services import check_update_time
+from materials.validators import youtube_validator
 
 
 # Create your models here.
@@ -10,6 +12,7 @@ class Course(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена курса")
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Владелец")
     preview_image = models.ImageField(upload_to='images/', blank=True, null=True, verbose_name="Превью")
+    updated = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
 
     def __str__(self):
         return self.title
@@ -18,11 +21,19 @@ class Course(models.Model):
         verbose_name = "Курс"
         verbose_name_plural = 'Курсы'
 
+    def save(self, *args, **kwargs):
+        should_send_mail = False
 
-youtube_validator = RegexValidator(
-    regex=r'^(https?://)?(www\.)?(youtube\.com|youtu\.be)/.+$',
-    message='Введите корректную ссылку на видеоролик YouTube.'
-)
+        if self.pk:
+            old_course = Course.objects.filter(pk=self.pk).values('updated').first()
+            if old_course:
+                should_send_mail = check_update_time(old_course['updated'])
+
+        super().save(*args, **kwargs)
+
+        if should_send_mail:
+            from .tasks import send_course_update_email_task
+            send_course_update_email_task.delay(self.pk)
 
 
 class Lesson(models.Model):
@@ -45,3 +56,15 @@ class Lesson(models.Model):
     class Meta:
         verbose_name = "Урок"
         verbose_name_plural = 'Уроки'
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.course:
+            course = self.course
+            course.save(update_fields=['updated'])
+
+    def delete(self, *args, **kwargs):
+        course = self.course
+        super().delete(*args, **kwargs)
+        if course:
+            course.save(update_fields=['updated'])
