@@ -40,6 +40,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     avatar = models.ImageField(upload_to='avatars/%Y/%m', blank=True, null=True, verbose_name="Аватар")
     first_name = models.CharField(max_length=50, blank=True, null=True, verbose_name="Имя")
     last_name = models.CharField(max_length=50, blank=True, null=True, verbose_name="Фамилия")
+    last_login = models.DateTimeField(auto_now=True, verbose_name="Дата последнего входа")
 
     is_active = models.BooleanField(default=True, verbose_name="Активен")
     is_staff = models.BooleanField(default=False, verbose_name="Статус персонала")
