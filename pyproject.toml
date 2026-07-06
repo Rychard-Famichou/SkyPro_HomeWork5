@@ -1,10 +1,11 @@
 [project]
 name = "djangohomework2"
 version = "0.1.0"
-description = ""
+description = "Платформа для онлайн-обучения"
 authors = [
-    {name = "Your Name",email = "you@example.com"}
+    {name = "Rychard Famichou",email = "rychard.famichou@gmail.com"}
 ]
+readme = "README.md"
 requires-python = "^3.12"
 dependencies = [
     "django (>=6.0.6,<7.0.0)",
@@ -33,3 +34,6 @@ build-backend = "poetry.core.masonry.api"
 dev = [
     "coverage (>=7.14.2,<8.0.0)"
 ]
+
+[tool.poetry]
+package-mode = false
