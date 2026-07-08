@@ -34,6 +34,7 @@ class CourseCreateTestCase(OwnerMixin):
             "title": "Test Course",
             "description": "Test Course Description",
             "owner": self.user.pk,
+            "price": 100.00,
         }
 
     def test_course_post_by_owner(self):
@@ -83,12 +84,14 @@ class LessonMixin(CourseMixin):
             description="Test Lesson",
             owner=self.user,
             course=self.course,
+            price= 100.00,
         )
         self.lesson2 = Lesson.objects.create(
             title="Test Lesson 2",
             description="Test Lesson",
             owner=self.user,
             course=self.course,
+            price=100.00,
         )
         self.lesson_list_url = reverse("materials:lesson_list")
         self.lesson_detail_url = reverse(
