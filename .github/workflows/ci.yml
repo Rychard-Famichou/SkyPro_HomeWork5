@@ -83,21 +83,21 @@ jobs:
       - name: Run migrations
         env:
           SECRET_KEY: "temporary_secret_key_for_testing_purposes"
-          DATABASE_NAME: "homework_db"
-          DATABASE_USER: "postgres"
-          DATABASE_PASSWORD: "super_password_123"
-          DATABASE_HOST: "127.0.0.1"
-          DATABASE_PORT: "5432"
+          POSTGRES_DB: "homework_db"
+          POSTGRES_USER: "postgres"
+          POSTGRES_PASSWORD: "super_password_123"
+          DB_HOST: "127.0.0.1"
+          DB_PORT: "5432"
         run: poetry run python manage.py migrate
 
       - name: Run tests
         env:
           SECRET_KEY: "temporary_secret_key_for_testing_purposes"
-          DATABASE_NAME: "homework_db"
-          DATABASE_USER: "postgres"
-          DATABASE_PASSWORD: "super_password_123"
-          DATABASE_HOST: "127.0.0.1"
-          DATABASE_PORT: "5432"
+          POSTGRES_DB: "homework_db"
+          POSTGRES_USER: "postgres"
+          POSTGRES_PASSWORD: "super_password_123"
+          DB_HOST: "127.0.0.1"
+          DB_PORT: "5432"
         run: poetry run python manage.py test
 
   build:
