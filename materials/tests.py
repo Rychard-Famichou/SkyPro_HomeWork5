@@ -50,7 +50,7 @@ class CourseMixin(OwnerMixin):
         # В тестах materials тест создание курса успешен
         super().setUp()
         self.course = Course.objects.create(
-            title="Test Course", description="Test Course Description", owner=self.user
+            title="Test Course", description="Test Course Description", owner=self.user, price=100.00,
         )
         self.course_detail_url = reverse(
             "materials:courses-detail", kwargs={"pk": self.course.pk}
