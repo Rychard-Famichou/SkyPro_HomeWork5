@@ -84,7 +84,7 @@ class LessonMixin(CourseMixin):
             description="Test Lesson",
             owner=self.user,
             course=self.course,
-            price= 100.00,
+            price=100.00,
         )
         self.lesson2 = Lesson.objects.create(
             title="Test Lesson 2",
