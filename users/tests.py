@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from django.contrib.auth.models import Group
 from django.urls import reverse
 from rest_framework import status
@@ -36,8 +38,19 @@ class OwnerPaymentCreateTestCase(LessonMixin):
         }
         self.payment_create_url = reverse("users:payment_create")
 
-    def test_payment_create(self):
-        """Тест создание платежа"""
+    @patch('users.views.create_stripe_product')
+    @patch('users.views.create_stripe_price')
+    @patch('users.views.create_stripe_checkout_session')
+    def test_payment_create(self, mock_checkout=None, mock_product=None, mock_price=None):
+        """Тест создание платежа с мокированием Stripe"""
+        class MockSession:
+            id = 'test_session_id'
+            url = 'https://test-stripe-link.com'
+
+        mock_checkout.return_value = MockSession()
+        mock_product.return_value = 'test_product_id'
+        mock_price.return_value = 'test_price_id'
+
         response = self.client.post(self.payment_create_url, self.data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
