@@ -66,6 +66,7 @@ class LessonCreateTestCase(CourseMixin):
             "description": "This is a test lesson",
             "course": self.course.pk,
             "video_link": "https://www.youtube.com/?app=desktop&gl=PL&hl=pl",
+            "price": 100.00,
         }
 
     def test_lesson_post_by_owner(self):
@@ -132,6 +133,7 @@ class LessonRUDTestCase(LessonMixin):
             "title": "Lesson for delete",
             "description": "Wrong Lesson",
             "course": self.course.pk,
+            "price": 100.00,
         }
         response = self.client.put(self.lesson_put_url, data_put, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)

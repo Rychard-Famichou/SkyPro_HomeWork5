@@ -32,7 +32,6 @@ class OwnerPaymentCreateTestCase(LessonMixin):
         self.data = {
             "owner": self.user.pk,
             "course": self.course.pk,
-            "amount": 100.00,
             "method": "TRANSFER",
         }
         self.payment_create_url = reverse("users:payment_create")
