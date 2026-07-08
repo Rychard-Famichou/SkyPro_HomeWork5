@@ -6,20 +6,30 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('materials', '0004_remove_lesson_video_file_lesson_video_link'),
+        ("materials", "0004_remove_lesson_video_file_lesson_video_link"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='course',
-            name='price',
-            field=models.DecimalField(decimal_places=2, default=100.0, max_digits=10, verbose_name='Цена курса'),
+            model_name="course",
+            name="price",
+            field=models.DecimalField(
+                decimal_places=2,
+                default=100.0,
+                max_digits=10,
+                verbose_name="Цена курса",
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='lesson',
-            name='price',
-            field=models.DecimalField(decimal_places=2, default=100.0, max_digits=10, verbose_name='Цена урока'),
+            model_name="lesson",
+            name="price",
+            field=models.DecimalField(
+                decimal_places=2,
+                default=100.0,
+                max_digits=10,
+                verbose_name="Цена урока",
+            ),
             preserve_default=False,
         ),
     ]

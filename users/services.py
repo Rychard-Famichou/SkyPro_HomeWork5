@@ -4,7 +4,7 @@ from functools import wraps
 import stripe
 from django.conf import settings
 from django.utils import timezone
-from rest_framework.exceptions import ValidationError, APIException
+from rest_framework.exceptions import APIException, ValidationError
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -17,7 +17,9 @@ def check_stripe_error(func):
         try:
             return func(*args, **kwargs)
         except stripe.error.InvalidRequestError as e:
-            raise ValidationError({"stripe_error": f"Некорректные данные: {e.user_message}"})
+            raise ValidationError(
+                {"stripe_error": f"Некорректные данные: {e.user_message}"}
+            )
         except stripe.error.StripeError as e:
             raise APIException(f"Ошибка платежного шлюза Stripe: {e.user_message}")
 
@@ -47,14 +49,16 @@ def create_stripe_checkout_session(price_id):
         success_url="https://example.com/success",
         line_items=[{"price": price_id, "quantity": 1}],
         mode="payment",
-        payment_method_types=['card'],
+        payment_method_types=["card"],
     )
     return session
 
 
 @check_stripe_error
 def retrieve_stripe_checkout_session(session_id):
-    session = stripe.checkout.Session.retrieve(session_id, )
+    session = stripe.checkout.Session.retrieve(
+        session_id,
+    )
     status = session["payment_status"]
     return status
 

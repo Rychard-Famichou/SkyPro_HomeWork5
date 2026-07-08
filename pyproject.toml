@@ -32,8 +32,27 @@ build-backend = "poetry.core.masonry.api"
 
 [dependency-groups]
 dev = [
-    "coverage (>=7.14.2,<8.0.0)"
+    "coverage (>=7.14.2,<8.0.0)",
+    "flake8 (>=7.3.0,<8.0.0)",
+    "black (>=26.5.1,<27.0.0)",
+    "isort (>=8.0.1,<9.0.0)",
+    "mypy (>=2.2.0,<3.0.0)"
 ]
 
 [tool.poetry]
 package-mode = false
+
+[tool.black]
+line-length = 88
+target-version = ['py310']
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+line_length = 88
+multi_line_output = 3
+
+[tool.mypy]
+python_version = "3.12"
+disallow_untyped_defs = true
+ignore_missing_imports = true

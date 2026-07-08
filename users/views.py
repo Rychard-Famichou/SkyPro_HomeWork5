@@ -7,34 +7,46 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 from materials.models import Course
 from users.models import CustomUser, Payment, Subscription
-from users.permissions import IsSelf, IsOwner
-from users.serializers import CustomUserSerializer, PaymentSerializer, CustomTokenObtainPairSerializer, \
-    PublicUserSerializer, SubscriptionSerializer
-from users.services import create_stripe_product, create_stripe_price, create_stripe_checkout_session, \
-    retrieve_stripe_checkout_session
+from users.permissions import IsOwner, IsSelf
+from users.serializers import (
+    CustomTokenObtainPairSerializer,
+    CustomUserSerializer,
+    PaymentSerializer,
+    PublicUserSerializer,
+    SubscriptionSerializer,
+)
+from users.services import (
+    create_stripe_checkout_session,
+    create_stripe_price,
+    create_stripe_product,
+    retrieve_stripe_checkout_session,
+)
 
 
 # Create your views here.
 class CustomTokenObtainPairView(TokenObtainPairView):
     """Create a new token for our user"""
+
     serializer_class = CustomTokenObtainPairSerializer
 
 
 class CustomUserCreateApiView(generics.CreateAPIView):
     """Create a new user in the system"""
+
     serializer_class = CustomUserSerializer
     permission_classes = [AllowAny]
 
 
 class CustomUserRetrieveAPIView(generics.RetrieveAPIView):
     """Retrieve a user from the system"""
+
     queryset = CustomUser.objects.all()
 
     def get_serializer_class(self):
-        if getattr(self, 'swagger_fake_view', False):
+        if getattr(self, "swagger_fake_view", False):
             return CustomUserSerializer
-        
-        user_pk = self.kwargs.get('pk')
+
+        user_pk = self.kwargs.get("pk")
 
         if self.request.user.is_authenticated and self.request.user.pk == int(user_pk):
             return CustomUserSerializer
@@ -44,12 +56,14 @@ class CustomUserRetrieveAPIView(generics.RetrieveAPIView):
 
 class CustomUserListAPIView(generics.ListAPIView):
     """List all users in the system"""
+
     serializer_class = CustomUserSerializer
     queryset = CustomUser.objects.all()
 
 
 class CustomUserUpdateAPIView(generics.UpdateAPIView):
     """Update a user from the system"""
+
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     permission_classes = [IsSelf]
@@ -57,17 +71,19 @@ class CustomUserUpdateAPIView(generics.UpdateAPIView):
 
 class CustomUserDestroyAPIView(generics.DestroyAPIView):
     """Delete a user from the system"""
+
     queryset = CustomUser.objects.all()
     permission_classes = [IsSelf]
 
 
 class PaymentCreateAPIView(generics.CreateAPIView):
     """Create a new payment"""
+
     serializer_class = PaymentSerializer
 
     def perform_create(self, serializer):
-        course = serializer.validated_data.get('course')
-        lesson = serializer.validated_data.get('lesson')
+        course = serializer.validated_data.get("course")
+        lesson = serializer.validated_data.get("lesson")
 
         if course:
             product_title = course.title
@@ -85,17 +101,18 @@ class PaymentCreateAPIView(generics.CreateAPIView):
             amount=amount,
             method="TRANSFER",
             stripe_session_id=stripe_session.id,
-            link=stripe_session.url
+            link=stripe_session.url,
         )
 
 
 class PaymentListAPIView(generics.ListAPIView):
     """List all payments"""
+
     serializer_class = PaymentSerializer
     queryset = Payment.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['course', 'lesson', 'method']
-    ordering_fields = ['date']
+    filterset_fields = ["course", "lesson", "method"]
+    ordering_fields = ["date"]
 
     def get_queryset(self):
         user = self.request.user
@@ -106,6 +123,7 @@ class PaymentListAPIView(generics.ListAPIView):
 
 class PaymentDetailAPIView(generics.RetrieveAPIView):
     """Retrieve a payment"""
+
     serializer_class = PaymentSerializer
     queryset = Payment.objects.all()
     permission_classes = [IsOwner]
@@ -129,23 +147,22 @@ class SubscriptionToggleAPIView(APIView):
         serializer = SubscriptionSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        course_id = serializer.validated_data['course_id']
+        course_id = serializer.validated_data["course_id"]
         user = request.user
         course = Course.objects.get(pk=course_id)
 
         subscription, created = Subscription.objects.get_or_create(
-            owner=user,
-            course=course
+            owner=user, course=course
         )
 
         if created:
             return Response(
                 {"message": f"Подписка на курс {course} успешно добавлена."},
-                status=status.HTTP_201_CREATED
+                status=status.HTTP_201_CREATED,
             )
         else:
             subscription.delete()
             return Response(
                 {"message": f"Подписка на курс {course} успешно удалена."},
-                status=status.HTTP_200_OK
+                status=status.HTTP_200_OK,
             )

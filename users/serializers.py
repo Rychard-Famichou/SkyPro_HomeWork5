@@ -12,30 +12,38 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields.pop('username', None)
+        self.fields.pop("username", None)
 
     def validate(self, attrs):
-        attrs[self.username_field] = attrs.get('email')
+        attrs[self.username_field] = attrs.get("email")
         return super().validate(attrs)
 
 
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
-        fields = ('status', 'owner', 'course', 'lesson', 'amount', 'date', 'method', 'stripe_session_id', 'link')
-        read_only_fields = ['owner', 'amount', 'stripe_session_id', 'link', 'date']
-        validators = [
-            CourseOrLessonValidator()
-        ]
+        fields = (
+            "status",
+            "owner",
+            "course",
+            "lesson",
+            "amount",
+            "date",
+            "method",
+            "stripe_session_id",
+            "link",
+        )
+        read_only_fields = ["owner", "amount", "stripe_session_id", "link", "date"]
+        validators = [CourseOrLessonValidator()]
 
     def create(self, validated_data):
-        course = validated_data.get('course')
-        lesson = validated_data.get('lesson')
+        course = validated_data.get("course")
+        lesson = validated_data.get("lesson")
 
         if course:
-            validated_data['amount'] = course.price
+            validated_data["amount"] = course.price
         elif lesson:
-            validated_data['amount'] = lesson.price
+            validated_data["amount"] = lesson.price
 
         return super().create(validated_data)
 
@@ -46,7 +54,17 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'email', 'password', 'payments', 'first_name', 'last_name', 'phone', 'city', 'avatar')
+        fields = (
+            "username",
+            "email",
+            "password",
+            "payments",
+            "first_name",
+            "last_name",
+            "phone",
+            "city",
+            "avatar",
+        )
 
     def create(self, validated_data):
         return CustomUser.objects.create_user(**validated_data)
@@ -55,7 +73,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 class PublicUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['username', 'email', 'first_name', 'phone', 'city', 'avatar']
+        fields = ["username", "email", "first_name", "phone", "city", "avatar"]
 
 
 class SubscriptionSerializer(serializers.ModelSerializer):
@@ -63,7 +81,7 @@ class SubscriptionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Subscription
-        fields = ['course_id']
+        fields = ["course_id"]
         validators = [
             CoursePkValidator(field="course_id"),
         ]

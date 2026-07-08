@@ -8,28 +8,37 @@ from users.models import Subscription
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
-        fields = '__all__'
-        read_only_fields = ['owner']
+        fields = "__all__"
+        read_only_fields = ["owner"]
         validators = [
             LessonVideoUrlValidator(field="video_link"),
         ]
 
 
 class CourseSerializer(serializers.ModelSerializer):
-    lesson_count = serializers.SerializerMethodField(label='Количество уроков')
-    lessons = LessonSerializer(many=True, read_only=True, label='Список уроков')
-    subscription = serializers.BooleanField(read_only=True, label='Подписка')
+    lesson_count = serializers.SerializerMethodField(label="Количество уроков")
+    lessons = LessonSerializer(many=True, read_only=True, label="Список уроков")
+    subscription = serializers.BooleanField(read_only=True, label="Подписка")
 
     class Meta:
         model = Course
-        fields = ('title', 'description', 'price', 'owner', 'subscription', 'preview_image', 'lesson_count', 'lessons')
-        read_only_fields = ['owner', 'subscription']
+        fields = (
+            "title",
+            "description",
+            "price",
+            "owner",
+            "subscription",
+            "preview_image",
+            "lesson_count",
+            "lessons",
+        )
+        read_only_fields = ["owner", "subscription"]
 
     def get_lesson_count(self, obj):
         return obj.lessons.count()
 
     def get_subscription(self, obj):
         owner_pk = self.request.user.pk
-        if not Subscription.objects.filter(owner=owner_pk,course=obj.pk).exists():
+        if not Subscription.objects.filter(owner=owner_pk, course=obj.pk).exists():
             return False
         return True

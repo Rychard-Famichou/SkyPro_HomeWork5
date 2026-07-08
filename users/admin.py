@@ -7,8 +7,9 @@ from users.models import CustomUser
 # Register your models here.
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
-    list_display = ('username', 'email', 'is_active', 'is_staff', 'is_superuser')
+    list_display = ("username", "email", "is_active", "is_staff", "is_superuser")
     filter_horizontal = []
-    list_filter = []  
+    list_filter = []
 
-admin.site.register(CustomUser,CustomUserAdmin)
+
+admin.site.register(CustomUser, CustomUserAdmin)
