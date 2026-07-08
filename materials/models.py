@@ -9,15 +9,9 @@ from materials.validators import youtube_validator
 class Course(models.Model):
     title = models.CharField(max_length=30, verbose_name="Название")
     description = models.TextField(verbose_name="Описание")
-    price = models.DecimalField(
-        max_digits=10, decimal_places=2, verbose_name="Цена курса"
-    )
-    owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Владелец"
-    )
-    preview_image = models.ImageField(
-        upload_to="images/", blank=True, null=True, verbose_name="Превью"
-    )
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена курса")
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Владелец")
+    preview_image = models.ImageField(upload_to="images/", blank=True, null=True, verbose_name="Превью")
     updated = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
 
     def __str__(self):
@@ -46,24 +40,16 @@ class Course(models.Model):
 class Lesson(models.Model):
     title = models.CharField(max_length=30, verbose_name="Название")
     description = models.TextField(verbose_name="Описание")
-    price = models.DecimalField(
-        max_digits=10, decimal_places=2, verbose_name="Цена урока"
-    )
-    owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Владелец"
-    )
-    preview_image = models.ImageField(
-        upload_to="images/", blank=True, null=True, verbose_name="Превью"
-    )
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена урока")
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Владелец")
+    preview_image = models.ImageField(upload_to="images/", blank=True, null=True, verbose_name="Превью")
     video_link = models.URLField(
         blank=True,
         null=True,
         validators=[youtube_validator],
         verbose_name="Ссылка на YouTube",
     )
-    course = models.ForeignKey(
-        Course, on_delete=models.CASCADE, related_name="lessons", verbose_name="Курс"
-    )
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="lessons", verbose_name="Курс")
 
     def __str__(self):
         return self.title

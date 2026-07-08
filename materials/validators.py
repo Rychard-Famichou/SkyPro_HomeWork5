@@ -13,13 +13,10 @@ class CourseOrLessonValidator:
         lesson = attrs.get("lesson")
 
         if not course and not lesson:
-            raise serializers.ValidationError(
-                "Выберите либо курс, либо урок, за который производится оплата."
-            )
+            raise serializers.ValidationError("Выберите либо курс, либо урок, за который производится оплата.")
         if course and lesson:
             raise serializers.ValidationError(
-                "Платеж не может быть одновременно и за курс, и за урок. "
-                "Выберите что-то одно."
+                "Платеж не может быть одновременно и за курс, и за урок. " "Выберите что-то одно."
             )
 
 
@@ -35,18 +32,13 @@ class LessonVideoUrlValidator:
         if not url:
             return attrs
 
-        youtube_regex = re.compile(
-            r"^(https?://)?(www\.)?(youtube\.com)/.+$", re.IGNORECASE
-        )
+        youtube_regex = re.compile(r"^(https?://)?(www\.)?(youtube\.com)/.+$", re.IGNORECASE)
 
         parsed_url = urlparse(url)
 
         if not parsed_url.netloc or not youtube_regex.match(url):
             raise serializers.ValidationError(
-                {
-                    self.field: f"Ссылка в поле"
-                                f" '{self.field}' должна вести на youtube.com"
-                }
+                {self.field: f"Ссылка в поле" f" '{self.field}' должна вести на youtube.com"}
             )
 
         return url

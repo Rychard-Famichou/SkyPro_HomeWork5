@@ -1,8 +1,18 @@
 [flake8]
-max-line-length = 88
-# E203 и W503 отключаются, чтобы не было конфликтов с Black
-ignore = E203, W503
-exclude = .git,__pycache__,build,dist,.venv,venv
+max-line-length = 119
+# Совместимость с Black (E203 - пробел перед двоеточием)
+extend-ignore = E203, W503
+exclude =
+    .git,
+    __pycache__,
+    build,
+    dist,
+    .venv,
+    venv,
+    */migrations/*,
+    manage.py
+
+# Специфичные исключения для Django/DRF
 per-file-ignores =
-    # Игнорируем неиспользуемые импорты в __init__.py
+    */settings/*.py: E501, F401, F403
     __init__.py: F401

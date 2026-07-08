@@ -10,7 +10,7 @@ class IsModerator(BasePermission):
 
 class IsNotModerator(BasePermission):
     """Разрешает доступ всем, кроме пользователей из группы 'Модераторы'
-     создавать и удалять объекты"""
+    создавать и удалять объекты"""
 
     def has_permission(self, request, view):
         return not request.user.groups.filter(name="Модераторы").exists()

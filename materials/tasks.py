@@ -1,6 +1,7 @@
-from celery import shared_task
 from django.conf import settings
 from django.core.mail import send_mail
+
+from celery import shared_task
 
 from materials.models import Course
 from users.models import Subscription
@@ -14,11 +15,7 @@ def send_course_update_email_task(course_id):
     except Course.DoesNotExist:
         return f"Курс с ID {course_id} не найден."
 
-    emails = list(
-        Subscription.objects.filter(course=course).values_list(
-            "owner__email", flat=True
-        )
-    )
+    emails = list(Subscription.objects.filter(course=course).values_list("owner__email", flat=True))
 
     if not emails:
         return f"Нет подписчиков для курса '{course.title}'."

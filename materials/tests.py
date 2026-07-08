@@ -50,12 +50,12 @@ class CourseMixin(OwnerMixin):
         # В тестах materials тест создание курса успешен
         super().setUp()
         self.course = Course.objects.create(
-            title="Test Course", description="Test Course Description",
-            owner=self.user, price=100.00,
+            title="Test Course",
+            description="Test Course Description",
+            owner=self.user,
+            price=100.00,
         )
-        self.course_detail_url = reverse(
-            "materials:courses-detail", kwargs={"pk": self.course.pk}
-        )
+        self.course_detail_url = reverse("materials:courses-detail", kwargs={"pk": self.course.pk})
 
 
 class LessonCreateTestCase(CourseMixin):
@@ -95,18 +95,10 @@ class LessonMixin(CourseMixin):
             price=100.00,
         )
         self.lesson_list_url = reverse("materials:lesson_list")
-        self.lesson_detail_url = reverse(
-            "materials:lesson_detail", kwargs={"pk": self.lesson.pk}
-        )
-        self.lesson_patch_url = reverse(
-            "materials:lesson_update", kwargs={"pk": self.lesson.pk}
-        )
-        self.lesson_put_url = reverse(
-            "materials:lesson_update", kwargs={"pk": self.lesson2.pk}
-        )
-        self.lesson_delete_url = reverse(
-            "materials:lesson_delete", kwargs={"pk": self.lesson2.pk}
-        )
+        self.lesson_detail_url = reverse("materials:lesson_detail", kwargs={"pk": self.lesson.pk})
+        self.lesson_patch_url = reverse("materials:lesson_update", kwargs={"pk": self.lesson.pk})
+        self.lesson_put_url = reverse("materials:lesson_update", kwargs={"pk": self.lesson2.pk})
+        self.lesson_delete_url = reverse("materials:lesson_delete", kwargs={"pk": self.lesson2.pk})
 
 
 class LessonRUDTestCase(LessonMixin):
@@ -161,10 +153,9 @@ class CourseRUDTestCase(LessonMixin):
             title="Test Course 2",
             description="Test Course Description",
             owner=self.user,
+            price=100.00,
         )
-        self.course_detail_url2 = reverse(
-            "materials:courses-detail", kwargs={"pk": self.course2.pk}
-        )
+        self.course_detail_url2 = reverse("materials:courses-detail", kwargs={"pk": self.course2.pk})
 
     def test_course_list_by_owner(self):
         """Просмотр списка курсов с пагинатором"""
@@ -189,7 +180,11 @@ class CourseRUDTestCase(LessonMixin):
 
     def test_course_put_by_owner(self):
         """Замена курса"""
-        data_put = {"title": "Course for delete", "description": "Wrong Course"}
+        data_put = {
+            "title": "Course for delete",
+            "description": "Wrong Course",
+            "price": 100.00,
+        }
         response = self.client.put(self.course_detail_url2, data_put, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.course2.refresh_from_db()
@@ -223,9 +218,7 @@ class UserTestCase(LessonMixin):
     def test_lesson_list_by_user(self):
         """Просмотр списка уроков с пагинатором для обычного пользователя"""
         response = self.client.get(self.lesson_list_url, format="json")
-        self.assertEqual(
-            response.data, {"count": 0, "next": None, "previous": None, "results": []}
-        )
+        self.assertEqual(response.data, {"count": 0, "next": None, "previous": None, "results": []})
 
     def test_lesson_detail_by_user(self):
         """Просмотр деталей урока для обычного пользователя"""
@@ -246,6 +239,7 @@ class UserTestCase(LessonMixin):
             "title": "Lesson for delete",
             "description": "Wrong Lesson",
             "course": self.course.pk,
+            "price": 100.00,
         }
         response = self.client.put(self.lesson_put_url, data_put, format="json")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -261,9 +255,7 @@ class UserTestCase(LessonMixin):
     def test_course_list_by_user(self):
         """Просмотр списка курсов с пагинатором для обычного пользователя"""
         response = self.client.get(self.courses_list_url, format="json")
-        self.assertEqual(
-            response.data, {"count": 0, "next": None, "previous": None, "results": []}
-        )
+        self.assertEqual(response.data, {"count": 0, "next": None, "previous": None, "results": []})
 
     def test_course_detail_by_user(self):
         """Просмотр деталей курса с подсчётом уроков для обычного пользователя"""
@@ -298,9 +290,7 @@ class ModerTestCase(LessonMixin):
 
     def setUp(self):
         super().setUp()
-        moder = CustomUser.objects.create_user(
-            username="moder", email="moder@example.com", password="moderpassword"
-        )
+        moder = CustomUser.objects.create_user(username="moder", email="moder@example.com", password="moderpassword")
         moder_group, created = Group.objects.get_or_create(name="Модераторы")
         moder.groups.add(moder_group)
         self.client.force_authenticate(user=moder)
@@ -311,6 +301,7 @@ class ModerTestCase(LessonMixin):
             "title": "Moder Course",
             "description": "Test Course Description",
             "owner": self.user.pk,
+            "price": 100.00,
         }
         response = self.client.post(self.courses_list_url, self.data, format="json")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -321,6 +312,7 @@ class ModerTestCase(LessonMixin):
             "title": "Moder Lesson",
             "description": "This is a test lesson",
             "course": self.course.pk,
+            "price": 100.00,
         }
         response = self.client.post(self.lesson_create_url, self.data, format="json")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -352,6 +344,7 @@ class ModerTestCase(LessonMixin):
             "title": "Lesson for delete",
             "description": "Wrong Lesson",
             "course": self.course.pk,
+            "price": 100.00,
         }
         response = self.client.put(self.lesson_put_url, data_put, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -388,7 +381,11 @@ class ModerTestCase(LessonMixin):
 
     def test_course_put_by_moder(self):
         """Замена курса для модератора"""
-        data_put = {"title": "Course for delete", "description": "Wrong Course"}
+        data_put = {
+            "title": "Course for delete",
+            "description": "Wrong Course",
+            "price": 100.00,
+        }
         response = self.client.put(self.course_detail_url, data_put, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.course.refresh_from_db()
@@ -414,6 +411,7 @@ class AnonimTestCase(CourseMixin):
             "title": "Guest Course",
             "description": "Test Course Description",
             "owner": self.user.pk,
+            "price": 100.00,
         }
         response = self.client.post(self.courses_list_url, self.data, format="json")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -424,6 +422,7 @@ class AnonimTestCase(CourseMixin):
             "title": "Guest Lesson",
             "description": "This is a test lesson",
             "course": self.course.pk,
+            "price": 100.00,
         }
         response = self.client.post(self.lesson_create_url, self.data, format="json")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

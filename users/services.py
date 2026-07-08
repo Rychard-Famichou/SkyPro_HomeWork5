@@ -1,10 +1,11 @@
 from datetime import timedelta
 from functools import wraps
 
-import stripe
 from django.conf import settings
 from django.utils import timezone
 from rest_framework.exceptions import APIException, ValidationError
+
+import stripe
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -17,9 +18,7 @@ def check_stripe_error(func):
         try:
             return func(*args, **kwargs)
         except stripe.error.InvalidRequestError as e:
-            raise ValidationError(
-                {"stripe_error": f"Некорректные данные: {e.user_message}"}
-            )
+            raise ValidationError({"stripe_error": f"Некорректные данные: {e.user_message}"})
         except stripe.error.StripeError as e:
             raise APIException(f"Ошибка платежного шлюза Stripe: {e.user_message}")
 

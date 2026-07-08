@@ -34,28 +34,16 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=25, unique=True, verbose_name="Никнейм")
     email = models.EmailField(max_length=50, unique=True, verbose_name="Почта")
-    phone = models.CharField(
-        max_length=15, unique=True, blank=True, null=True, verbose_name="Телефон"
-    )
+    phone = models.CharField(max_length=15, unique=True, blank=True, null=True, verbose_name="Телефон")
     city = models.CharField(max_length=50, blank=True, null=True, verbose_name="Город")
-    avatar = models.ImageField(
-        upload_to="avatars/%Y/%m", blank=True, null=True, verbose_name="Аватар"
-    )
-    first_name = models.CharField(
-        max_length=50, blank=True, null=True, verbose_name="Имя"
-    )
-    last_name = models.CharField(
-        max_length=50, blank=True, null=True, verbose_name="Фамилия"
-    )
-    last_login = models.DateTimeField(
-        auto_now=True, verbose_name="Дата последнего входа"
-    )
+    avatar = models.ImageField(upload_to="avatars/%Y/%m", blank=True, null=True, verbose_name="Аватар")
+    first_name = models.CharField(max_length=50, blank=True, null=True, verbose_name="Имя")
+    last_name = models.CharField(max_length=50, blank=True, null=True, verbose_name="Фамилия")
+    last_login = models.DateTimeField(auto_now=True, verbose_name="Дата последнего входа")
 
     is_active = models.BooleanField(default=True, verbose_name="Активен")
     is_staff = models.BooleanField(default=False, verbose_name="Статус персонала")
-    is_superuser = models.BooleanField(
-        default=False, verbose_name="Статус суперпользователя"
-    )
+    is_superuser = models.BooleanField(default=False, verbose_name="Статус суперпользователя")
 
     objects = CustomUserManager()
 
@@ -101,20 +89,12 @@ class Payment(models.Model):
         blank=True,
         verbose_name="Урок",
     )
-    amount = models.DecimalField(
-        max_digits=10, decimal_places=2, verbose_name="Сумма оплаты"
-    )
+    amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Сумма оплаты")
     date = models.DateTimeField(auto_now_add=True, verbose_name="Дата оплаты")
-    method = models.CharField(
-        choices=MethodChoices.choices, max_length=20, verbose_name="Метод оплаты"
-    )
-    stripe_session_id = models.CharField(
-        max_length=255, blank=True, null=True, verbose_name="ID сессии Stripe"
-    )
+    method = models.CharField(choices=MethodChoices.choices, max_length=20, verbose_name="Метод оплаты")
+    stripe_session_id = models.CharField(max_length=255, blank=True, null=True, verbose_name="ID сессии Stripe")
     link = models.TextField(blank=True, null=True, verbose_name="Ссылка на оплату")
-    status = models.CharField(
-        max_length=50, default="created", verbose_name="Статус платежа"
-    )
+    status = models.CharField(max_length=50, default="created", verbose_name="Статус платежа")
 
     class Meta:
         verbose_name = "Платеж"
@@ -126,12 +106,8 @@ class Payment(models.Model):
 
 
 class Subscription(models.Model):
-    owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Владелец"
-    )
-    course = models.ForeignKey(
-        "materials.Course", on_delete=models.CASCADE, verbose_name="Курс"
-    )
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Владелец")
+    course = models.ForeignKey("materials.Course", on_delete=models.CASCADE, verbose_name="Курс")
 
     class Meta:
         verbose_name = "Подписка"

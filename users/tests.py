@@ -52,13 +52,9 @@ class OwnerSubscribeTestCase(LessonMixin):
 
     def test_subscription_toggle_create(self):
         """Тест создания/удаления подписки"""
-        response = self.client.post(
-            self.subscription_toggle_url, self.data, format="json"
-        )
+        response = self.client.post(self.subscription_toggle_url, self.data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        response = self.client.post(
-            self.subscription_toggle_url, self.data, format="json"
-        )
+        response = self.client.post(self.subscription_toggle_url, self.data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
@@ -66,9 +62,7 @@ class PaymentMixin(LessonMixin):
 
     def setUp(self):
         super().setUp()
-        self.payment = Payment.objects.create(
-            owner=self.user, course=self.course, amount=100.00, method="TRANSFER"
-        )
+        self.payment = Payment.objects.create(owner=self.user, course=self.course, amount=100.00, method="TRANSFER")
         self.user_detail_url = reverse("users:user_detail", kwargs={"pk": self.user.pk})
         self.user_patch_url = reverse("users:user_update", kwargs={"pk": self.user.pk})
         self.user_delete_url = reverse("users:user_delete", kwargs={"pk": self.user.pk})
@@ -136,9 +130,7 @@ class ModerTestCase(PaymentMixin):
     def setUp(self):
         super().setUp()
         self.owner_id = self.user.pk
-        moder = CustomUser.objects.create_user(
-            username="moder", email="moder@example.com", password="moderpassword"
-        )
+        moder = CustomUser.objects.create_user(username="moder", email="moder@example.com", password="moderpassword")
         moder_group, created = Group.objects.get_or_create(name="Модераторы")
         moder.groups.add(moder_group)
         self.client.force_authenticate(user=moder)

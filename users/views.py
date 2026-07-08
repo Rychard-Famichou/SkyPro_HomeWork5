@@ -1,8 +1,9 @@
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from materials.models import Course
@@ -151,9 +152,7 @@ class SubscriptionToggleAPIView(APIView):
         user = request.user
         course = Course.objects.get(pk=course_id)
 
-        subscription, created = Subscription.objects.get_or_create(
-            owner=user, course=course
-        )
+        subscription, created = Subscription.objects.get_or_create(owner=user, course=course)
 
         if created:
             return Response(
