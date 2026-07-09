@@ -7,5 +7,5 @@ from users.models import CustomUser
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
     list_display = ("email", "is_active", "is_staff", "is_superuser")
-    fields = ("email", "is_active", "is_staff", "is_superuser")\
+    fields = ("email", "is_active", "is_staff", "is_superuser")
     exclude = ("last_login",)
