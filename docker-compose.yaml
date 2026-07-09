@@ -38,6 +38,17 @@ services:
       redis:
         condition: service_started
 
+  nginx:
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - static_volume:/app/staticfiles
+    depends_on:
+      - web
+
   celery:
     build: .
     command: celery -A config worker --loglevel=info
@@ -63,3 +74,4 @@ services:
 volumes:
   pg_data:
   redis_data:
+  static_volume:
