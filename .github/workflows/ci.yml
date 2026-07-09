@@ -111,11 +111,19 @@ jobs:
       - name: Log in to Docker Hub
         run: echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
 
-      - name: Build Docker image
+      # Собираем и пушим основной образ приложения (для web, celery, celery-beat)
+      - name: Build main application image
         run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }} .
 
-      - name: Push Docker image to Docker Hub
+      - name: Push main application image
         run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+
+      # Собираем и пушим образ Nginx
+      - name: Build Nginx image
+        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/myapp-nginx:${{ github.sha }} ./nginx
+
+      - name: Push Nginx image
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/myapp-nginx:${{ github.sha }}
 
   deploy:
     needs: build
@@ -127,11 +135,13 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
 
-      - name: Deploy to Server
+      # Деплой через Docker Compose на сервере
+      - name: Deploy to Server via Docker Compose
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-            docker stop myapp || true
-            docker rm myapp || true
-            docker run -d --name myapp -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+            cd SkyPro_HomeWork5
+            export IMAGE_TAG=${{ github.sha }}
+            docker compose pull web nginx celery celery-beat
+            docker compose up -d --remove-orphans
+            docker image prune -f
           EOF
