@@ -8,4 +8,4 @@ from users.models import CustomUser
 class CustomUserAdmin(admin.ModelAdmin):
     list_display = ("email", "is_active", "is_staff", "is_superuser")
     fields = ("email", "is_active", "is_staff", "is_superuser")
-    readonly_fields = ("last_login", "date_joined")
+    readonly_fields = ("last_login",)
