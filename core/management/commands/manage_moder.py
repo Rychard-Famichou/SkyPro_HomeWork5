@@ -8,18 +8,18 @@ class Command(BaseCommand):
     help = 'Управление членством пользователя в группе "Модераторы"'
 
     def add_arguments(self, parser):
-        parser.add_argument('email', type=str, help='Email пользователя')
+        parser.add_argument("email", type=str, help="Email пользователя")
 
         parser.add_argument(
-            '--remove',
-            action='store_true',
-            help='Удалить пользователя из группы вместо добавления'
+            "--remove",
+            action="store_true",
+            help="Удалить пользователя из группы вместо добавления",
         )
 
     def handle(self, *args, **options):
-        email = options['email']
-        remove_action = options['remove']
-        group_name = 'Модераторы'
+        email = options["email"]
+        remove_action = options["remove"]
+        group_name = "Модераторы"
 
         if remove_action:
             try:
@@ -35,7 +35,7 @@ class Command(BaseCommand):
         try:
             user = CustomUser.objects.get(email=email)
         except CustomUser.DoesNotExist:
-            self.stdout.write(self.style.ERROR(f'Ошибка: Пользователь с email {email} не найден.'))
+            self.stdout.write(self.style.ERROR(f"Ошибка: Пользователь с email {email} не найден."))
             return
 
         if remove_action:

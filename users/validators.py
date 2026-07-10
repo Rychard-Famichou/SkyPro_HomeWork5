@@ -5,6 +5,7 @@ from materials.models import Course
 
 class CoursePkValidator:
     """Валидатор проверяет, что курс существует."""
+
     def __init__(self, field):
         self.field = field
 

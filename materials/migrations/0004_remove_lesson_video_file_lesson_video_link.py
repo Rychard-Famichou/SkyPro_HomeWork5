@@ -7,17 +7,27 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('materials', '0003_course_owner_lesson_owner'),
+        ("materials", "0003_course_owner_lesson_owner"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='lesson',
-            name='video_file',
+            model_name="lesson",
+            name="video_file",
         ),
         migrations.AddField(
-            model_name='lesson',
-            name='video_link',
-            field=models.URLField(blank=True, null=True, validators=[django.core.validators.RegexValidator(message='Введите корректную ссылку на видеоролик YouTube.', regex='^(https?://)?(www\\.)?(youtube\\.com|youtu\\.be)/.+$')], verbose_name='Ссылка на YouTube'),
+            model_name="lesson",
+            name="video_link",
+            field=models.URLField(
+                blank=True,
+                null=True,
+                validators=[
+                    django.core.validators.RegexValidator(
+                        message="Введите корректную ссылку на видеоролик YouTube.",
+                        regex="^(https?://)?(www\\.)?(youtube\\.com|youtu\\.be)/.+$",
+                    )
+                ],
+                verbose_name="Ссылка на YouTube",
+            ),
         ),
     ]

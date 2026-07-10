@@ -2,7 +2,7 @@ from django.core.management import BaseCommand, call_command
 
 
 class Command(BaseCommand):
-    help = 'Очищает базу данных перед использованием фикстур'
+    help = "Очищает базу данных перед использованием фикстур"
 
     def handle(self, *args, **options):
         self.stdout.write("Удаление старых данных перед загрузкой...")

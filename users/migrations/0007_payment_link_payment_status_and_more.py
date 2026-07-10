@@ -6,23 +6,29 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0006_remove_payment_user_payment_owner_subscription'),
+        ("users", "0006_remove_payment_user_payment_owner_subscription"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='payment',
-            name='link',
-            field=models.URLField(blank=True, max_length=400, null=True, verbose_name='Ссылка на оплату'),
+            model_name="payment",
+            name="link",
+            field=models.URLField(
+                blank=True, max_length=400, null=True, verbose_name="Ссылка на оплату"
+            ),
         ),
         migrations.AddField(
-            model_name='payment',
-            name='status',
-            field=models.CharField(default='created', max_length=50, verbose_name='Статус платежа'),
+            model_name="payment",
+            name="status",
+            field=models.CharField(
+                default="created", max_length=50, verbose_name="Статус платежа"
+            ),
         ),
         migrations.AddField(
-            model_name='payment',
-            name='stripe_session_id',
-            field=models.CharField(blank=True, max_length=255, null=True, verbose_name='ID сессии Stripe'),
+            model_name="payment",
+            name="stripe_session_id",
+            field=models.CharField(
+                blank=True, max_length=255, null=True, verbose_name="ID сессии Stripe"
+            ),
         ),
     ]

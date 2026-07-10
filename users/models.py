@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
-from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -10,9 +9,9 @@ class CustomUserManager(BaseUserManager):
 
     def create_user(self, username, email, password=None, **extra_fields):
         if not email:
-            raise ValueError('Поле Email обязательно для заполнения')
+            raise ValueError("Поле Email обязательно для заполнения")
         if not username:
-            raise ValueError('Поле Username обязательно для заполнения')
+            raise ValueError("Поле Username обязательно для заполнения")
 
         email = self.normalize_email(email)
         user = self.model(username=username, email=email, **extra_fields)
@@ -21,13 +20,13 @@ class CustomUserManager(BaseUserManager):
         return user
 
     def create_superuser(self, username, email, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
 
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Суперпользователь должен иметь is_staff=True.')
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Суперпользователь должен иметь is_superuser=True.')
+        if extra_fields.get("is_staff") is not True:
+            raise ValueError("Суперпользователь должен иметь is_staff=True.")
+        if extra_fields.get("is_superuser") is not True:
+            raise ValueError("Суперпользователь должен иметь is_superuser=True.")
 
         return self.create_user(username, email, password, **extra_fields)
 
@@ -37,7 +36,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=50, unique=True, verbose_name="Почта")
     phone = models.CharField(max_length=15, unique=True, blank=True, null=True, verbose_name="Телефон")
     city = models.CharField(max_length=50, blank=True, null=True, verbose_name="Город")
-    avatar = models.ImageField(upload_to='avatars/%Y/%m', blank=True, null=True, verbose_name="Аватар")
+    avatar = models.ImageField(upload_to="avatars/%Y/%m", blank=True, null=True, verbose_name="Аватар")
     first_name = models.CharField(max_length=50, blank=True, null=True, verbose_name="Имя")
     last_name = models.CharField(max_length=50, blank=True, null=True, verbose_name="Фамилия")
     last_login = models.DateTimeField(auto_now=True, verbose_name="Дата последнего входа")
@@ -48,8 +47,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     objects = CustomUserManager()
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username"]
 
     class Meta:
         verbose_name = "Пользователь"
@@ -70,10 +69,26 @@ class Payment(models.Model):
         CASH = "CASH", "Наличные"
         TRANSFER = "TRANSFER", "Перевод"
 
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='payments',
-                              verbose_name="Владелец")
-    course = models.ForeignKey('materials.Course', on_delete=models.PROTECT, null=True, blank=True, verbose_name="Курс")
-    lesson = models.ForeignKey('materials.Lesson', on_delete=models.PROTECT, null=True, blank=True, verbose_name="Урок")
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="payments",
+        verbose_name="Владелец",
+    )
+    course = models.ForeignKey(
+        "materials.Course",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        verbose_name="Курс",
+    )
+    lesson = models.ForeignKey(
+        "materials.Lesson",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        verbose_name="Урок",
+    )
     amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Сумма оплаты")
     date = models.DateTimeField(auto_now_add=True, verbose_name="Дата оплаты")
     method = models.CharField(choices=MethodChoices.choices, max_length=20, verbose_name="Метод оплаты")
@@ -92,7 +107,7 @@ class Payment(models.Model):
 
 class Subscription(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Владелец")
-    course = models.ForeignKey('materials.Course', on_delete=models.CASCADE, verbose_name="Курс")
+    course = models.ForeignKey("materials.Course", on_delete=models.CASCADE, verbose_name="Курс")
 
     class Meta:
         verbose_name = "Подписка"
